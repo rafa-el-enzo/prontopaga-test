@@ -70,3 +70,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Middleware que extrae el Bearer token del header `Authorization`, lo verifica con `jwt.verify`, adjunta el payload a `req.user` y responde 401 en cualquier caso de fallo de token (sin token, inválido, expirado); además 500 si `JWT_SECRET` no está configurado.
 - **Qué decidí/ajusté yo:** Mantuve la distinción de status: 401 para fallos atribuibles al cliente (token ausente o no verificable) y 500 para `JWT_SECRET` faltante, por ser un error de configuración del servidor y no del request; no simplifiqué todo a 401. Código aceptado sin cambios; detecté aparte que `score.routes.ts` aún importaba el nombre viejo del esqueleto (`auth` en vez de `authenticate`) y lo reporté en lugar de modificar otros archivos sin avisar.
 - **Nivel de revisión:** generado y aceptado tal cual (auth.ts sin cambios); ajuste pendiente en `score.routes.ts` por confirmar.
+
+---
+
+## Middleware de autorización (`middlewares/authorize.ts`)
+
+- **Módulo/feature:** Middleware de autorización por rol/RUT (middlewares/authorize.ts)
+- **Herramienta usada:** Claude (chat) + Claude Code CLI
+- **Qué generó la IA:** Middleware que corre después de `authenticate`: admin accede a cualquier RUT; user solo al RUT de su token, comparado con `rutsAreEqual` (tolera diferencias de formato) y no con `===`. Chequeo defensivo de `req.user` ausente → 401; RUT no coincidente → 403.
+- **Qué decidí/ajusté yo:** Acepté la lógica sin cambios. Al validar con `tsc` apareció un desajuste de Express 5: `req.params.rut` es `string | string[]` en `@types/express@5`. Elegí narrowing con `Array.isArray` (toma `[0]` si es array) en vez de un cast `as string`, para no silenciar el chequeo y mantener el estilo defensivo del archivo; descarté el cast porque ocultaría un `TypeError` si el valor llegara a ser array.
+- **Nivel de revisión:** generado y revisado; un único ajuste (narrowing de `req.params.rut`) evaluado y aplicado tras confirmación. `npx tsc --noEmit` en verde.
