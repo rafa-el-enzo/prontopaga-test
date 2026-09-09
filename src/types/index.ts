@@ -6,17 +6,18 @@ export type Role = 'admin' | 'user';
 // Payload que viaja dentro del JWT.
 export interface JwtPayload {
   sub: string;
-  rut: string;
   role: Role;
-  // TODO: agregar campos adicionales (iat, exp los agrega jsonwebtoken).
+  rut?: string; // presente solo cuando role === 'user'
+  // iat / exp los agrega jsonwebtoken al firmar.
 }
 
 // Representación de un usuario dentro del sistema.
 export interface User {
   id: string;
-  rut: string;
+  username: string;
+  password: string;
   role: Role;
-  // TODO: completar propiedades del usuario (nombre, email, hash de password, etc.).
+  rut?: string; // solo los usuarios con role 'user' lo tienen
 }
 
 // Cuerpo de respuesta del endpoint GET /score/:rut.

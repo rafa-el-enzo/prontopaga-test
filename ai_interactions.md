@@ -40,3 +40,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Función de hash determinista con SHA-256 nativo de Node (`crypto.createHash`), tomando los primeros 8 caracteres hex del digest y aplicando módulo 101 para un score 0-100.
 - **Qué decidí/ajusté yo:** Evalué 5 alternativas (suma de char codes, DJB2, CRC32, SHA-256, multiplicative hashing con primo) y elegí SHA-256 nativo: evita implementar hashing propio (menos bugs sutiles), sin dependencias externas y es la primitiva más defendible en fintech: preferir herramientas estándar y auditadas sobre soluciones caseras, incluso para lógica no crítica.
 - **Nivel de revisión:** generado y aceptado tal cual.
+
+---
+
+## Corrección de tipos tras validación con `tsc`
+
+- **Módulo/feature:** Corrección de tipos tras validación con tsc (types/index.ts, services/auth.service.ts, import de config/index.ts en app.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Detectó 6 errores de compilación al correr `npx tsc --noEmit` tras escribir `auth.service.ts` y los reportó con la causa raíz de cada uno.
+- **Qué decidí/ajusté yo:** Revisé cada error antes de aplicar el fix: confirmé que `User` necesitaba `username`/`password`/`rut` opcional (types/index.ts estaba incompleto respecto al diseño acordado), que `JwtPayload.rut` debía ser opcional para reflejar la regla de negocio (admin sin rut), apliqué un cast puntual en `jwt.sign()` por un problema conocido de tipado en `@types/jsonwebtoken` (`StringValue` vs `string`), y agregué el import de `./config` en `app.ts` para que las env vars carguen incluso en tests de integración aislados.
+- **Nivel de revisión:** cada fix fue evaluado individualmente antes de aplicar, no aceptado en bloque.

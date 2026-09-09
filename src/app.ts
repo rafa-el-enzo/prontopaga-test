@@ -1,3 +1,4 @@
+import './config'; // carga las variables de entorno antes que nada
 import express, { Application } from 'express';
 import cors from 'cors';
 
