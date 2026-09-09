@@ -50,3 +50,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Detectó 6 errores de compilación al correr `npx tsc --noEmit` tras escribir `auth.service.ts` y los reportó con la causa raíz de cada uno.
 - **Qué decidí/ajusté yo:** Revisé cada error antes de aplicar el fix: confirmé que `User` necesitaba `username`/`password`/`rut` opcional (types/index.ts estaba incompleto respecto al diseño acordado), que `JwtPayload.rut` debía ser opcional para reflejar la regla de negocio (admin sin rut), apliqué un cast puntual en `jwt.sign()` por un problema conocido de tipado en `@types/jsonwebtoken` (`StringValue` vs `string`), y agregué el import de `./config` en `app.ts` para que las env vars carguen incluso en tests de integración aislados.
 - **Nivel de revisión:** cada fix fue evaluado individualmente antes de aplicar, no aceptado en bloque.
+
+---
+
+## Fix de entorno — incompatibilidad de versión de TypeScript
+
+- **Módulo/feature:** Fix de entorno — incompatibilidad de versión de TypeScript
+- **Herramienta usada:** Diagnóstico propio (sin IA) a partir del stack trace
+- **Qué pasó:** `npm install typescript` sin versión fijada instaló TypeScript 7.x (preview), incompatible con ts-node 10.9.2 — rompe en tiempo de arranque al intentar leer `tsconfig.json`.
+- **Qué decidí/ajusté yo:** Fijar la versión a `typescript@^5.6.0` (última estable de la serie 5), compatible con el resto del toolchain (ts-node-dev).
+- **Nivel de revisión:** N/A — no generado por IA.
