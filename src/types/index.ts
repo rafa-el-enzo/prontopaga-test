@@ -19,12 +19,5 @@ export interface User {
   // TODO: completar propiedades del usuario (nombre, email, hash de password, etc.).
 }
 
-// Augmenta el Request de Express para exponer el usuario autenticado.
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    interface Request {
-      user?: JwtPayload;
-    }
-  }
-}
+// La extensión de Express.Request para exponer `req.user` vive en
+// ./express.d.ts (declaration merging global).

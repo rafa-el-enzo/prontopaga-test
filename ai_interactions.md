@@ -12,4 +12,12 @@ registran módulos con intervención real de IA.
 - **Herramienta usada:** Claude Code CLI (Claude Sonnet)
 - **Qué generó la IA:** Esqueleto de carpetas y archivos con imports básicos, firmas de función vacías y comentarios `TODO`, sin lógica de negocio.
 - **Qué decidí/ajusté yo:** Definí la arquitectura en capas (routes → controllers → services) y la separación de `auth` y `authorize` como middlewares independientes.
-- **Nivel de revisión:** generado y aceptado tal cual
+
+---
+
+## Tipado de `req.user` (`types/express.d.ts`)
+
+- **Módulo/feature:** Tipado de req.user (types/express.d.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Declaration merging sobre `Express.Request` para tipar `req.user` como `JwtPayload`.
+- **Qué decidí/ajusté yo:** Elegí este enfoque (declaration merging global) sobre alternativas como una interfaz `AuthenticatedRequest` explícita, porque con pocos endpoints protegidos reduce fricción y es el patrón estándar en proyectos Express + TypeScript.
