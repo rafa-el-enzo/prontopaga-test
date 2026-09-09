@@ -1,12 +1,37 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { JwtPayload } from '../types';
 
-// Middleware placeholder: valida el JWT enviado en el header Authorization.
-export function auth(req: Request, res: Response, next: NextFunction): void {
-  // TODO: extraer el token del header "Authorization: Bearer <token>".
-  // TODO: verificar el token con jwt.verify usando config.jwtSecret.
-  // TODO: asignar el payload decodificado a req.user.
-  // TODO: responder 401 si el token falta o es inválido.
-  next();
-}
+/**
+ * Verifica el JWT del header Authorization. Si es válido, adjunta el
+ * payload decodificado a req.user y continúa. Si falta, es inválido
+ * o expiró, responde 401 sin llamar a next().
+ */
+export const authenticate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const authHeader = req.headers.authorization;
 
-export default auth;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token no proporcionado' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret) {
+    res.status(500).json({ error: 'Error de configuración del servidor' });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, secret) as JwtPayload;
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ error: 'Token inválido o expirado' });
+  }
+};
