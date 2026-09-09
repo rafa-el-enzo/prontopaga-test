@@ -110,3 +110,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Handler de 4 parámetros que resuelve el status desde `err.status`/`err.statusCode` (4xx-5xx, si no 500), responde `{ error }` y loguea los 5xx.
 - **Qué decidí yo:** No mapear por texto del mensaje (solo status explícito); 5xx → mensaje genérico fijo (nunca filtra internals, ni en dev), 4xx → `err.message`; `console.error` con method/path/stack solo para 5xx; guarda defensiva `res.headersSent` → `next(err)`.
 - **Nivel de revisión:** generado según decisiones; verificado con smoke test (SyntaxError del body-parser, error interno, statusCode explícito, status fuera de rango, headersSent) y `tsc` en verde.
+
+---
+
+## Wiring de la app (`app.ts` + `config/index.ts`)
+
+- **Módulo/feature:** Conexión final de la app y arranque (app.ts, config/index.ts, server.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Handler 404 JSON antes del errorHandler en `app.ts` y fail-fast en `config/index.ts` (lanza si falta `JWT_SECRET`). `server.ts` sin cambios.
+- **Qué decidí yo:** 404 con `{ error: 'Ruta no encontrada' }` (consistente con la API) en vez del 404 HTML por defecto; `config` aborta el arranque si falta `JWT_SECRET` (PORT queda con default); manejo de señales / `unhandledRejection` y health check quedaron fuera de alcance.
+- **Nivel de revisión:** generado según decisiones; verificado end-to-end con el server real (5 casos de checklist + 404 + JSON mal formado) y `tsc` en verde.

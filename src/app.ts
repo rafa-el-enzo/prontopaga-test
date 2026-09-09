@@ -1,5 +1,5 @@
 import './config'; // carga las variables de entorno antes que nada
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 
 import authRoutes from './routes/auth.routes';
@@ -11,9 +11,13 @@ const app: Application = express();
 app.use(cors());
 app.use(express.json());
 
-// TODO: montar rutas bajo su prefijo definitivo.
 app.use('/auth', authRoutes);
 app.use('/score', scoreRoutes);
+
+// Ruta no encontrada: respuesta JSON consistente con el resto de la API.
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
 
 // El error handler siempre va al final, después de las rutas.
 app.use(errorHandler);
