@@ -90,3 +90,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Handler que valida el body, verifica credenciales con `validateCredentials`, firma el JWT con `generateToken` y responde `{ token }`; wiring de `auth.routes.ts` (`POST /login`).
 - **Qué decidí yo:** Validación estricta del body (solo `username`/`password` string, `trim` de username, rechazo de campos extra) → 422; credenciales inválidas → 401 con mensaje genérico; éxito → 200 `{ token }` sin datos de usuario; error inesperado vía `next(err)` al errorHandler central.
 - **Nivel de revisión:** generado según decisiones tomadas; verificado con smoke test (9 casos de body y credenciales) y `tsc` en verde.
+
+---
+
+## Controller y ruta de score (`controllers/score.controller.ts`)
+
+- **Módulo/feature:** Handler GET /score/:rut (controllers/score.controller.ts + routes/score.routes.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Handler que valida el RUT del path con `isValidRut` y devuelve `getScoreData(rut)`; ruta encadenada `authenticate → authorize → getScore`.
+- **Qué decidí yo:** El controller pre-valida el RUT y responde 400 `{ error: 'RUT inválido' }` (el throw del service queda como segunda barrera); middlewares inline en la ruta en ese orden; corregí el `rut` del mock `user1` a `12.345.678-5` (DV válido) en vez de relajar la validación del endpoint.
+- **Nivel de revisión:** generado según decisiones; verificado con smoke test (RUT en 2 formatos, DV inválido, basura, determinismo) y `tsc` en verde.

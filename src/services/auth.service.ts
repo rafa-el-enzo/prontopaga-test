@@ -14,7 +14,7 @@ const MOCK_USERS: User[] = [
     username: 'user1',
     password: 'user123',
     role: 'user',
-    rut: '12.345.678-9',
+    rut: '12.345.678-5',
   },
 ];
 

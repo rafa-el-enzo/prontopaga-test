@@ -5,8 +5,6 @@ import { authorize } from '../middlewares/authorize';
 
 const router = Router();
 
-// TODO: GET /:rut -> scoreController.getScore
-//       protegido por authenticate + authorize (p. ej. authorize('admin')).
-// router.get('/:rut', authenticate, authorize('admin'), scoreController.getScore);
+router.get('/:rut', authenticate, authorize, scoreController.getScore);
 
 export default router;
