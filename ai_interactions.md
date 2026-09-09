@@ -21,3 +21,12 @@ registran módulos con intervención real de IA.
 - **Herramienta usada:** Claude Code CLI
 - **Qué generó la IA:** Declaration merging sobre `Express.Request` para tipar `req.user` como `JwtPayload`.
 - **Qué decidí/ajusté yo:** Elegí este enfoque (declaration merging global) sobre alternativas como una interfaz `AuthenticatedRequest` explícita, porque con pocos endpoints protegidos reduce fricción y es el patrón estándar en proyectos Express + TypeScript.
+
+---
+
+## Utilidades de RUT (`utils/rut.ts`)
+
+- **Módulo/feature:** Validación y formato de RUT chileno (utils/rut.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** `cleanRut`, `isValidRut` (módulo 11), `formatRut` y `rutsAreEqual`, tipadas y sin dependencias externas, más una batería de pruebas de comportamiento.
+- **Qué decidí/ajusté yo:** `cleanRut` también elimina espacios y normaliza a mayúsculas; `isValidRut` solo exige el mínimo del algoritmo (cuerpo numérico + DV), sin longitudes arbitrarias; casos borde acordados: RUT vacío → `isValidRut` false y `rutsAreEqual("","")` true; `formatRut` idempotente porque limpia antes de formatear.
