@@ -177,28 +177,25 @@ curl -s -w '\nHTTP %{http_code}\n' \
 HTTP 401
 ```
 
-### 8. RUT con dígito verificador inválido → 400
+---
+
+## Tests
 
 ```bash
-curl -s -w '\nHTTP %{http_code}\n' \
-  http://localhost:3000/score/12.345.678-9 \
-  -H "Authorization: Bearer $ADMIN_TOKEN"
+npm test
 ```
 
-```json
-{ "error": "RUT inválido" }
-HTTP 400
-```
+Suite de tests unitarios con el runner nativo de Node (`node:test`), sin
+dependencias extra. Corre sobre `test/api.test.ts` vía `ts-node/register` y
+cubre, con `req`/`res` mockeados (sin levantar servidor):
 
-### 9. Body de login inválido → 422
-
-```bash
-curl -s -w '\nHTTP %{http_code}\n' -X POST http://localhost:3000/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"username":"admin","password":"admin123","extra":1}'
-```
-
-```json
-{ "error": "El body debe contener únicamente username y password como strings" }
-HTTP 422
-```
+- `utils/rut`: `cleanRut`, `isValidRut` (DV numérico, K, 0, casos inválidos),
+  `formatRut`, `rutsAreEqual`.
+- `score.service`: determinismo y rango 0-100 de `calculateScore`, forma de
+  `getScoreData` y su error con DV inválido.
+- `auth.service`: `validateCredentials` y payload del JWT (con/sin `rut` según rol).
+- `auth.controller`: matriz de validación estricta del body (422), 401 y 200.
+- `score.controller`: 200, normalización del RUT, 400 por DV inválido, param array.
+- `authenticate` / `authorize`: 401 sin token, 401 token inválido/expirado,
+  500 sin `JWT_SECRET`, admin vs user, 403 por RUT ajeno.
+- `errorHandler`: resolución de status, 5xx genérico, 4xx con `err.message`, `headersSent`.

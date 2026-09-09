@@ -130,3 +130,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Script de `curl` contra el server real que ejercita login (admin/user1), acceso admin a cualquier RUT, user a su RUT, user a RUT ajeno (403), sin token (401), token inválido y expirado (401), más 404, body inválido (422), JSON mal formado (400) y RUT con DV inválido (400). La corrida se registró primero en `VERIFICACION.md` y luego se consolidó en `README.md` (instrucciones de uso + ejemplos curl explícitos).
 - **Qué decidí yo:** Alcance de los casos a cubrir; mover la doc a `README.md` con ejemplos simplificados y curls explícitos en vez de un archivo aparte.
 - **Nivel de revisión:** ejecutado y revisado; los 12 casos dieron el status y body esperados.
+
+---
+
+## Tests unitarios (`test/api.test.ts`)
+
+- **Módulo/feature:** Suite de tests unitarios con node:test (test/api.test.ts, script `npm test`)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** 57 tests sobre `utils/rut`, `score.service`, `auth.service`, los dos controllers y los tres middlewares, con `req`/`res` mockeados; script `npm test` que corre con el runner nativo de Node vía `ts-node/register`.
+- **Qué decidí yo:** Runner nativo `node:test` sin dependencias nuevas (en vez de Vitest o un catálogo Markdown); tests fuera de `src/` para no ensuciar el build; recorté el README a flujo esencial + 5 casos de checklist y moví el detalle exhaustivo a la suite.
+- **Nivel de revisión:** generado según decisiones; los 57 tests pasan y el `tsc` del proyecto sigue en verde.
