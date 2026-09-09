@@ -123,10 +123,10 @@ registran módulos con intervención real de IA.
 
 ---
 
-## Verificación end-to-end (`VERIFICACION.md`)
+## Verificación end-to-end y README
 
-- **Módulo/feature:** Corrida de verificación de los 5 casos de la checklist + extras
+- **Módulo/feature:** Corrida de verificación de los 5 casos de la checklist + extras, y documentación de uso
 - **Herramienta usada:** Claude Code CLI
-- **Qué generó la IA:** Script de `curl` contra el server real que ejercita login (admin/user1), acceso admin a cualquier RUT, user a su RUT, user a RUT ajeno (403), sin token (401), token inválido y expirado (401), más 404, body inválido (422), JSON mal formado (400) y RUT con DV inválido (400); resultados volcados a `VERIFICACION.md`.
-- **Qué decidí yo:** Alcance de los casos a cubrir y dejar la corrida registrada en un `VERIFICACION.md` en la raíz para la entrega del desafío.
+- **Qué generó la IA:** Script de `curl` contra el server real que ejercita login (admin/user1), acceso admin a cualquier RUT, user a su RUT, user a RUT ajeno (403), sin token (401), token inválido y expirado (401), más 404, body inválido (422), JSON mal formado (400) y RUT con DV inválido (400). La corrida se registró primero en `VERIFICACION.md` y luego se consolidó en `README.md` (instrucciones de uso + ejemplos curl explícitos).
+- **Qué decidí yo:** Alcance de los casos a cubrir; mover la doc a `README.md` con ejemplos simplificados y curls explícitos en vez de un archivo aparte.
 - **Nivel de revisión:** ejecutado y revisado; los 12 casos dieron el status y body esperados.
