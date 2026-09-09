@@ -80,3 +80,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Middleware que corre después de `authenticate`: admin accede a cualquier RUT; user solo al RUT de su token, comparado con `rutsAreEqual` (tolera diferencias de formato) y no con `===`. Chequeo defensivo de `req.user` ausente → 401; RUT no coincidente → 403.
 - **Qué decidí/ajusté yo:** Acepté la lógica sin cambios. Al validar con `tsc` apareció un desajuste de Express 5: `req.params.rut` es `string | string[]` en `@types/express@5`. Elegí narrowing con `Array.isArray` (toma `[0]` si es array) en vez de un cast `as string`, para no silenciar el chequeo y mantener el estilo defensivo del archivo; descarté el cast porque ocultaría un `TypeError` si el valor llegara a ser array.
 - **Nivel de revisión:** generado y revisado; un único ajuste (narrowing de `req.params.rut`) evaluado y aplicado tras confirmación. `npx tsc --noEmit` en verde.
+
+---
+
+## Controller y ruta de login (`controllers/auth.controller.ts`)
+
+- **Módulo/feature:** Handler POST /auth/login (controllers/auth.controller.ts + routes/auth.routes.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Handler que valida el body, verifica credenciales con `validateCredentials`, firma el JWT con `generateToken` y responde `{ token }`; wiring de `auth.routes.ts` (`POST /login`).
+- **Qué decidí yo:** Validación estricta del body (solo `username`/`password` string, `trim` de username, rechazo de campos extra) → 422; credenciales inválidas → 401 con mensaje genérico; éxito → 200 `{ token }` sin datos de usuario; error inesperado vía `next(err)` al errorHandler central.
+- **Nivel de revisión:** generado según decisiones tomadas; verificado con smoke test (9 casos de body y credenciales) y `tsc` en verde.
