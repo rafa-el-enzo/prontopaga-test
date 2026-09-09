@@ -140,3 +140,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** 57 tests sobre `utils/rut`, `score.service`, `auth.service`, los dos controllers y los tres middlewares, con `req`/`res` mockeados; script `npm test` que corre con el runner nativo de Node vía `ts-node/register`.
 - **Qué decidí yo:** Runner nativo `node:test` sin dependencias nuevas (en vez de Vitest o un catálogo Markdown); tests fuera de `src/` para no ensuciar el build; recorté el README a flujo esencial + 5 casos de checklist y moví el detalle exhaustivo a la suite.
 - **Nivel de revisión:** generado según decisiones; los 57 tests pasan y el `tsc` del proyecto sigue en verde.
+
+---
+
+## Reubicación a `backend/` (monorepo)
+
+- **Módulo/feature:** Movida del backend a `backend/` dentro de un monorepo backend + frontend
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** `git mv` de todo el backend (`src`, `test`, `tsconfig.json`, `package.json`, `README.md`, este archivo) a `backend/`; nada del código cambió (rutas relativas). En la raíz quedan solo `.gitignore` y un `package.json` que orquesta ambos paquetes con scripts `--prefix` (sin workspaces). Verificado con `npm test` (57 ok) y `npm run build` desde la nueva ubicación.
+- **Qué decidí yo:** Layout monorepo `backend/` + `frontend/` en vez de colgar el frontend al costado; `.gitignore` único en la raíz; un `ai_interactions.md` por lado y uno combinado más adelante.
+- **Nivel de revisión:** ejecutado y verificado; sin cambios de lógica.
