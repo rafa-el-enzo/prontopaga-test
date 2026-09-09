@@ -100,3 +100,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Handler que valida el RUT del path con `isValidRut` y devuelve `getScoreData(rut)`; ruta encadenada `authenticate → authorize → getScore`.
 - **Qué decidí yo:** El controller pre-valida el RUT y responde 400 `{ error: 'RUT inválido' }` (el throw del service queda como segunda barrera); middlewares inline en la ruta en ese orden; corregí el `rut` del mock `user1` a `12.345.678-5` (DV válido) en vez de relajar la validación del endpoint.
 - **Nivel de revisión:** generado según decisiones; verificado con smoke test (RUT en 2 formatos, DV inválido, basura, determinismo) y `tsc` en verde.
+
+---
+
+## Error handler centralizado (`middlewares/errorHandler.ts`)
+
+- **Módulo/feature:** Middleware de manejo de errores centralizado (middlewares/errorHandler.ts)
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Handler de 4 parámetros que resuelve el status desde `err.status`/`err.statusCode` (4xx-5xx, si no 500), responde `{ error }` y loguea los 5xx.
+- **Qué decidí yo:** No mapear por texto del mensaje (solo status explícito); 5xx → mensaje genérico fijo (nunca filtra internals, ni en dev), 4xx → `err.message`; `console.error` con method/path/stack solo para 5xx; guarda defensiva `res.headersSent` → `next(err)`.
+- **Nivel de revisión:** generado según decisiones; verificado con smoke test (SyntaxError del body-parser, error interno, statusCode explícito, status fuera de rango, headersSent) y `tsc` en verde.
