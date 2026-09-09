@@ -120,3 +120,13 @@ registran módulos con intervención real de IA.
 - **Qué generó la IA:** Handler 404 JSON antes del errorHandler en `app.ts` y fail-fast en `config/index.ts` (lanza si falta `JWT_SECRET`). `server.ts` sin cambios.
 - **Qué decidí yo:** 404 con `{ error: 'Ruta no encontrada' }` (consistente con la API) en vez del 404 HTML por defecto; `config` aborta el arranque si falta `JWT_SECRET` (PORT queda con default); manejo de señales / `unhandledRejection` y health check quedaron fuera de alcance.
 - **Nivel de revisión:** generado según decisiones; verificado end-to-end con el server real (5 casos de checklist + 404 + JSON mal formado) y `tsc` en verde.
+
+---
+
+## Verificación end-to-end (`VERIFICACION.md`)
+
+- **Módulo/feature:** Corrida de verificación de los 5 casos de la checklist + extras
+- **Herramienta usada:** Claude Code CLI
+- **Qué generó la IA:** Script de `curl` contra el server real que ejercita login (admin/user1), acceso admin a cualquier RUT, user a su RUT, user a RUT ajeno (403), sin token (401), token inválido y expirado (401), más 404, body inválido (422), JSON mal formado (400) y RUT con DV inválido (400); resultados volcados a `VERIFICACION.md`.
+- **Qué decidí yo:** Alcance de los casos a cubrir y dejar la corrida registrada en un `VERIFICACION.md` en la raíz para la entrega del desafío.
+- **Nivel de revisión:** ejecutado y revisado; los 12 casos dieron el status y body esperados.
