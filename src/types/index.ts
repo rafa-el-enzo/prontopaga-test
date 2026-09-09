@@ -19,5 +19,12 @@ export interface User {
   // TODO: completar propiedades del usuario (nombre, email, hash de password, etc.).
 }
 
+// Cuerpo de respuesta del endpoint GET /score/:rut.
+export interface ScoreResponse {
+  rut: string;
+  score: number;
+  fecha: string;
+}
+
 // La extensión de Express.Request para exponer `req.user` vive en
 // ./express.d.ts (declaration merging global).

@@ -30,3 +30,13 @@ registran módulos con intervención real de IA.
 - **Herramienta usada:** Claude Code CLI
 - **Qué generó la IA:** `cleanRut`, `isValidRut` (módulo 11), `formatRut` y `rutsAreEqual`, tipadas y sin dependencias externas, más una batería de pruebas de comportamiento.
 - **Qué decidí/ajusté yo:** `cleanRut` también elimina espacios y normaliza a mayúsculas; `isValidRut` solo exige el mínimo del algoritmo (cuerpo numérico + DV), sin longitudes arbitrarias; casos borde acordados: RUT vacío → `isValidRut` false y `rutsAreEqual("","")` true; `formatRut` idempotente porque limpia antes de formatear.
+
+---
+
+## Cálculo de score (`services/score.service.ts`)
+
+- **Módulo/feature:** Cálculo de score (services/score.service.ts)
+- **Herramienta usada:** Claude (chat) + Claude Code CLI
+- **Qué generó la IA:** Función de hash determinista con SHA-256 nativo de Node (`crypto.createHash`), tomando los primeros 8 caracteres hex del digest y aplicando módulo 101 para un score 0-100.
+- **Qué decidí/ajusté yo:** Evalué 5 alternativas (suma de char codes, DJB2, CRC32, SHA-256, multiplicative hashing con primo) y elegí SHA-256 nativo: evita implementar hashing propio (menos bugs sutiles), sin dependencias externas y es la primitiva más defendible en fintech: preferir herramientas estándar y auditadas sobre soluciones caseras, incluso para lógica no crítica.
+- **Nivel de revisión:** generado y aceptado tal cual.
